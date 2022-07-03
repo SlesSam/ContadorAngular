@@ -1,0 +1,24 @@
+<h1>{{counter}}</h1>
+
+<div class="btn_setup">
+    <h3>Setup</h3>
+    <button class="btn btn-primary" (click)='start()'>Start</button>
+    <button class="btn btn-primary" (click)='pause()'>Pause</button>
+    <button class="btn btn-primary" (click)='initi()'>Reset</button>
+</div>
+
+
+<div class="btn_count">
+    <h3>Count</h3>
+    <button   class="btn btn-primary" (click)='up()'>Count Up</button>
+    <button class="btn btn-primary" (click)='down()'>Count Down</button>
+</div>
+
+
+<div class="inputs">
+    <h3>Set to</h3>
+    <input type="number" value="" (cuechange)="coutInit($event)">
+    <br>
+    <h3>Step</h3>
+    <input type="number"  value="" [(ngModel)]="this.step"/>
+</div>
