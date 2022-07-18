@@ -1,0 +1,24 @@
+<h3>Counter</h3>
+
+<form>
+    <div #counte id="counte"></div>
+
+    <button  id="start" (click)="start()">Start</button>
+<button  id="pause" (click)="pause()">Pause</button>
+<button id="reset" (click)="reset()" >Reset</button>
+<h2>UP y Down</h2>
+<button  id="up" (click)="uped()">Up </button>
+<button  id="down" (click)="down()" >Down </button>
+<h2>Set To</h2>
+<!-- <input  type="number" [formControl]="set" id="set" value="1" > -->
+<!-- <button id="setT" (click)"setValue" >set</button> -->
+
+<input  type="number" (change)="setTo($event)" value="0" >
+
+<h2>Intervalos(incremento)</h2> 
+<!-- <input [formControl]="incremento" type="number" id="incrementoo" value="2"> -->
+
+
+<input type="number" (change)="incremtTo($event)" value="{{setr}}">
+
+</form>

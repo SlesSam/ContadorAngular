@@ -1,6 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { interval, NEVER, of, scan, startWith, Subject } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators'
+import {  Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { FormControl } from '@angular/forms';
+import { interval,   NEVER,   of,   Subject } from 'rxjs';
+import { map,startWith, scan, tap,switchMap, catchError, } from 'rxjs/operators'
 @Component({
   selector: 'app-prueba-counter',
   templateUrl: './prueba-counter.component.html',
@@ -8,18 +10,28 @@ import { catchError, switchMap, tap } from 'rxjs/operators'
 })
 export class PruebaCounterComponent implements OnInit {
   @ViewChild('counte', {read: ElementRef,static:true})
-  // @ViewChild('set', {read: ElementRef,static:true})
-  // @ViewChild('incrementoo', {read: ElementRef,static:true})
-  // value= document.getElementById('id');
-
-  // set!: ElementRef;
-  // incrementoo!:ElementRef;
+  
   counter!: ElementRef;
+
+  ver:any;
+
+  set: FormControl = new FormControl();
+
+incremento: FormControl = new FormControl();
+
+constructor(){
+  this.set.valueChanges.subscribe(y =>{  
+    this.counter.nativeElement.innerText= y
+    ,console.log(y) });
+  this.incremento.valueChanges.subscribe(x =>{ 
+    console.log(x), 
+    this.counter.nativeElement.innerText = x });
+
+
+}
 //Subject nos permite que sea 'multicasted' mas que un observable
   private counteSubje: Subject<{pause?:boolean, counterValue?: any, increment?: any, countUp?:boolean}>= new Subject();
 
-
-  constructor() { }
 
   ngOnInit(): void {
     this.initializeCounter();
@@ -31,12 +43,13 @@ export class PruebaCounterComponent implements OnInit {
     console.log('holaaaa iniciar');
     
     this.counteSubje.pipe(
-          startWith({pause: true, counterValue: 0}), //es para empezar el contador 
+          startWith({pause: true, counterValue: 0, increment: 2, countUp:true}), //es para empezar el contador 
           scan((acc, value)=>({...acc,...value})), 
           tap((state)=>{
             this.counter.nativeElement.innerText = state.counterValue;}),
           switchMap(  (state)=> state.pause ? NEVER : interval(1000).pipe(
             tap(v=>{
+
               state.counterValue++ 
               this.counter.nativeElement.innerText = state.counterValue;
               console.log(state.counterValue)
@@ -48,31 +61,6 @@ export class PruebaCounterComponent implements OnInit {
           
           ).subscribe(x => console.log(x));
 
-  }
-
-
-  counterInit(){
-    this.counteSubje.pipe(
-      startWith({
-        pause: true, 
-        counterValue: 0,
-        increment: 1,
-        countUp:true}), 
-        scan((acc, val)=>({...acc,...val})),
-        tap((mapp)=>this.counter.nativeElement.innerText = mapp.counterValue),
-        switchMap((stae)=>
-        stae.countUp 
-        ?  interval(1000).pipe(
-            tap(
-              ()=>(stae.counterValue+= stae.countUp ? stae.increment : -stae.increment)
-            ),
-            tap(()=>this.counter.nativeElement.innerText = stae.counterValue)
-
-          ) 
-        : NEVER
-        ) 
-        
-    ).subscribe();
   }
 
 
@@ -94,12 +82,17 @@ export class PruebaCounterComponent implements OnInit {
   }
 
   countUp(){
-    this.counteSubje.next({countUp: false})
+   
+    this.counteSubje.next({ countUp: true})
     console.log('Cuenta progresiva')
   }
 
   countDown(){
-    this.counteSubje.next({countUp: true})
+
+    this.counteSubje.next({countUp: false})
     console.log('Cuenta regresiva')
   }
+
+
+
 }
